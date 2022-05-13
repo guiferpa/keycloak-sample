@@ -1,0 +1,69 @@
+version: "3.7"
+
+networks:
+  principal:
+    driver: bridge
+
+services:
+  db:
+    image: postgres:13
+    volumes:
+      - ./.docker/dbdata:/var/lib/postgres
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: pwd
+    networks:
+      - principal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U keycloak"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+
+  idp:
+    image: quay.io/keycloak/keycloak:18.0.0-legacy
+    container_name: keycloak
+    environment:
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: pwd
+      DB_VENDOR: POSTGRES
+      DB_ADDR: db
+      DB_PORT: 5432
+      DB_DATABASE: keycloak
+      DB_SCHEMA: public
+      DB_PASSWORD: pwd
+      JDBC_PARAMS: "ssl=false"
+    networks:
+      - principal
+    ports:
+      - 8080:8080
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend-spa:
+    container_name: frontend-spa
+    build: 
+      context: frontend/spa
+      dockerfile: Dockerfile.dev # For works as production change Dockerfile.dev to just Dockerfile
+    environment:
+      REACT_APP_KEYCLOAK_CONFIG: "{\"realm\":\"sample\",\"auth-server-url\":\"http://localhost:8080/auth/\",\"ssl-required\":\"external\",\"resource\":\"frontend-spa\",\"public-client\":true,\"confidential-port\":0}"
+    volumes:
+      - ./frontend/spa/src/:/opt/app/src/
+    networks:
+      - principal
+    ports:
+      - 8081:3000 # For works as production change the port bind to 8080 intead of 3000
+
+  frontend-ssr:
+    container_name: frontend-ssr
+    build:
+      context: frontend/ssr
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./frontend/ssr/pages/:/opt/app/pages/
+    networks:
+      - principal
+    ports:
+      - 8082:3000
