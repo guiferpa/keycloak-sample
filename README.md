@@ -11,8 +11,8 @@ Awesome ref link: https://www.appsdeveloperblog.com/keycloak-authorization-code-
 
 ### Frontend SPA
 
-This client has a flow based on implicit authentication flow then you have to config this flow in Keycloak befora make your tests
+This client has a flow based on public and implicit flow then you have to config this flow in Keycloak befora make your tests
 
 ### Frontend SSR
 
-This client has a flow based on public with authorization_code grant type then you have to config this flow in Keycloak before make your tests
+This client has a flow based on confidential with authorization_code grant type then you have to config this flow in Keycloak before make your tests
