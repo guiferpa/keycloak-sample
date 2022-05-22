@@ -7,8 +7,8 @@ import HttpStatusCodes from 'http-status-codes';
 
 const isUserAuthenticated = async (): Promise<boolean> => {
   try {
-    const host = "http://localhost:8080";
-    const realm = "sample";
+    const host = process.env["REACT_APP_KEYCLOAK_HOST"];
+    const realm = process.env["REACT_APP_KEYCLOAK_REALM"];
     const requester: AxiosInstance = axios.create({
       baseURL: host,
       timeout: 5000 // 5 seconds
@@ -21,7 +21,6 @@ const isUserAuthenticated = async (): Promise<boolean> => {
 
     if (resp.status === HttpStatusCodes.UNAUTHORIZED) return false;
 
-    console.log("Authenticated user:", resp.data);
     return true;
   } catch(err) {
     return false;
@@ -29,11 +28,11 @@ const isUserAuthenticated = async (): Promise<boolean> => {
 }
 
 const getAuthenticationURL = (): string => {
-  const host = "http://localhost:8080";
-  const realm = "sample";
+  const host = process.env["REACT_APP_KEYCLOAK_HOST"];
+  const realm = process.env["REACT_APP_KEYCLOAK_REALM"];
   const endpoint = `/auth/realms/${realm}/protocol/openid-connect/auth`;
   const params = {
-    "client_id": "frontend-spa",
+    "client_id": process.env["REACT_APP_KEYCLOAK_CLIENT_ID"],
     "response_type": "id_token token",
     "state": uuid(),
     "nonce": `${(new Date()).getTime()}`,

@@ -7,9 +7,9 @@ import { setCookie } from 'nookies';
 const getAccessToken = async (ctx: GetServerSidePropsContext, clientId: string, clientSecret: string): Promise<any> => {
   try {
     const { code } = ctx.query;
-    const { origin } = absoluteUrl(ctx.req);
-    const host: string = "http://10.0.0.213:8080";
-    const realm: string = "sample";
+    const abs = absoluteUrl(ctx.req);
+    const host = process.env["KEYCLOAK_HOST"];
+    const realm = process.env["KEYCLOAK_REALM"];
     const endpoint: string = `/auth/realms/${realm}/protocol/openid-connect/token`;
     const data = {
       "client_id": clientId,
@@ -17,7 +17,7 @@ const getAccessToken = async (ctx: GetServerSidePropsContext, clientId: string, 
       "nonce": `${(new Date()).getTime()}`,
       "grant_type": "authorization_code",
       "code": code,
-      "redirect_uri": `${origin}/oauth/auth/callback`
+      "redirect_uri": `http://${abs.host}/oauth/auth/callback`
     }
 
     const requester = axios.create({
@@ -34,33 +34,29 @@ const getAccessToken = async (ctx: GetServerSidePropsContext, clientId: string, 
     return resp.data;
   } catch (err) {
     const aerr: AxiosError = (err as AxiosError);
-    if (aerr.isAxiosError) console.log(aerr.response);
+    if (aerr.isAxiosError) console.error(aerr.response);
     throw err;
   }
 }
 
 const AuthCallback: NextPage = () => null;
 
+const setCookies = (ctx: GetServerSidePropsContext, clientId: string, body: any, options: any) => {
+  setCookie(ctx, `${clientId}:access_token`, body["access_token"] as string, options);
+  setCookie(ctx, `${clientId}:access_token_expires_in`, body["expires_in"] as string, options);
+  setCookie(ctx, `${clientId}:id_token`, body["id_token"] as string, options);
+  setCookie(ctx, `${clientId}:refresh_token`, body["refresh_token"] as string, options);
+}
+
 export const getServerSideProps: GetServerSideProps = async (
   ctx: GetServerSidePropsContext
 ): Promise<GetServerSidePropsResult<any>> => {
-  const clientId = process.env["KEYCLOAK_CLIENT_ID"] as string;
-  const clientSecret = process.env["KEYCLOAK_CLIENT_SECRET"] as string;
+  const clientId = process.env["KEYCLOAK_CLIENT_ID"];
+  const clientSecret = process.env["KEYCLOAK_CLIENT_SECRET"];
 
-  const body: any = await getAccessToken(ctx, clientId, clientSecret);
+  const body: any = await getAccessToken(ctx, clientId as string, clientSecret as string);
 
-  setCookie(ctx, "frontend-ssr:access_token", body["access_token"] as string, {
-    path: "/"
-  });
-  setCookie(ctx, "frontend-ssr:access_token_expires_in", body["expires_in"] as string, {
-    path: "/"
-  });
-  setCookie(ctx, "frontend-ssr:id_token", body["id_token"] as string, {
-    path: "/"
-  });
-  setCookie(ctx, "frontend-ssr:refresh_token", body["refresh_token"] as string, {
-    path: "/"
-  });
+  setCookies(ctx, clientId as string, body, { path: "/" });
 
   return {
     redirect: {

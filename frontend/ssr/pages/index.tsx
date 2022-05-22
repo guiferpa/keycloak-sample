@@ -11,16 +11,17 @@ import type {
 const Index: NextPage = () => null;
 
 const getAuthenticationURL = (ctx: GetServerSidePropsContext): string => {
-  const host = "http://10.0.0.213:8080";
-  const realm = "sample";
+  const abs = absoluteUrl(ctx.req);
+  const host = process.env["KEYCLOAK_HOST"];
+  const realm = process.env["KEYCLOAK_REALM"];
   const endpoint = `/auth/realms/${realm}/protocol/openid-connect/auth`;
   const params = {
-    "client_id": "frontend-ssr",
+    "client_id": process.env["KEYCLOAK_CLIENT_ID"],
     "response_type": "code",
     "state": uuid(),
     "nonce": `${(new Date()).getTime()}`,
     "scope": "openid profile",
-    "redirect_uri": `http://10.0.0.213:8082/oauth/auth/callback`
+    "redirect_uri": `http://${abs.host}/oauth/auth/callback`
   };
 
   return `${host}${endpoint}?${qs.stringify(params)}`;

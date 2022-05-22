@@ -46,7 +46,9 @@ services:
       context: frontend/spa
       dockerfile: Dockerfile.dev # For works as production change Dockerfile.dev to just Dockerfile
     environment:
-      REACT_APP_KEYCLOAK_CONFIG: "{\"realm\":\"sample\",\"auth-server-url\":\"http://localhost:8080/auth/\",\"ssl-required\":\"external\",\"resource\":\"frontend-spa\",\"public-client\":true,\"confidential-port\":0}"
+      REACT_APP_KEYCLOAK_HOST: http://host.docker.internal:8080
+      REACT_APP_KEYCLOAK_REALM: sample
+      REACT_APP_KEYCLOAK_CLIENT_ID: frontend-spa
     volumes:
       - ./frontend/spa/src/:/opt/app/src/
     networks:
@@ -60,6 +62,7 @@ services:
       context: frontend/ssr
       dockerfile: Dockerfile.dev
     environment:
+      KEYCLOAK_HOST: http://host.docker.internal:8080
       KEYCLOAK_REALM: sample
       KEYCLOAK_CLIENT_ID: frontend-ssr
       KEYCLOAK_CLIENT_SECRET: keBMgBYmpTk3SD1IRElIVFehfT6b1LTA

@@ -20,8 +20,6 @@ const OAuthCallback: React.FunctionComponent = () => {
   localStorage.setItem("frontend-spa:access_token_expires_in", params["expires_in"] as string);
   localStorage.setItem("frontend-spa:id_token", params["id_token"] as string);
 
-  console.log("Authenticated params:", params);
-
   return <Navigate to={"/profile"} />;
 }
 
