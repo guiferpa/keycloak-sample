@@ -1,5 +1,6 @@
-import type { GetServerSideProps, GetServerSidePropsResult, NextPage } from 'next'
-import Head from 'next/head'
+import type { GetServerSideProps, GetServerSidePropsResult, NextPage } from 'next';
+import Head from 'next/head';
+import { withAuthentication } from '../middlewares/auth';
 
 const Profile: NextPage = () => {
   return (
@@ -11,10 +12,12 @@ const Profile: NextPage = () => {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (): Promise<GetServerSidePropsResult<any>> => {
-  return {
-    props: {}
+export const getServerSideProps: GetServerSideProps = withAuthentication(
+  async (): Promise<GetServerSidePropsResult<any>> => {
+    return {
+      props: {}
+    }
   }
-}
+);
 
 export default Profile;

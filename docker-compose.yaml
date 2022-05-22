@@ -60,9 +60,9 @@ services:
       context: frontend/ssr
       dockerfile: Dockerfile.dev
     environment:
-      NEXT_PUBLIC_KEYCLOAK_CONFIG: "{\"realm\":\"sample\",\"url\":\"http://localhost:8080/auth/\",\"clientId\":\"frontend-ssr\"}"
-      NEXT_TELEMETRY_DISABLED: 1
-      NEXTAUTH_URL: "http://localhost:8082"
+      KEYCLOAK_REALM: sample
+      KEYCLOAK_CLIENT_ID: frontend-ssr
+      KEYCLOAK_CLIENT_SECRET: keBMgBYmpTk3SD1IRElIVFehfT6b1LTA
     volumes:
       - ./frontend/ssr/pages/:/opt/app/pages/
     networks:

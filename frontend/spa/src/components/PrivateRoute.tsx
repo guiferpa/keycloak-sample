@@ -41,7 +41,7 @@ const PrivateRoute: React.FunctionComponent<PrivateRouteProps> = (props) => {
     return <Outlet />;
   }
 
-  return null;
+  return <span>Page not found</span>;
 }
 
 export default PrivateRoute;
