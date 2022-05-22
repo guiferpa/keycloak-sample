@@ -1,25 +1,14 @@
-import type { AppContext, AppProps } from 'next/app';
-import { parseCookies } from 'nookies';
-import { SSRKeycloakProvider, SSRCookies } from '@react-keycloak-fork/ssr';
+import type { AppProps } from 'next/app';
+import { SessionProvider } from 'next-auth/react';
 
-import { config as keycloakConfig } from '../services/auth';
+function _App({ Component, pageProps }: AppProps) {
+  const { session } = pageProps;
 
-interface InitialProps {
-  cookies: any;
-}
-
-function _App({ Component, pageProps, cookies }: AppProps & InitialProps) {
   return (
-    <SSRKeycloakProvider keycloakConfig={keycloakConfig} persistor={SSRCookies(cookies)}>
+    <SessionProvider session={session}>
       <Component {...pageProps} />
-    </SSRKeycloakProvider>
+    </SessionProvider>
   );
-}
-
-_App.getInitialProps = async (app: AppContext) => {
-  return {
-    cookies: app.ctx.req ? parseCookies(app.ctx) : {}
-  }
 }
 
 export default _App;

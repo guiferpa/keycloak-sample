@@ -1,6 +1,5 @@
 import type { GetServerSideProps, GetServerSidePropsResult, NextPage } from 'next'
 import Head from 'next/head'
-import { useKeycloak } from '@react-keycloak-fork/ssr';
 
 const Profile: NextPage = () => {
   return (
@@ -13,12 +12,6 @@ const Profile: NextPage = () => {
 }
 
 export const getServerSideProps: GetServerSideProps = async (): Promise<GetServerSidePropsResult<any>> => {
-  const { initialized, keycloak } = useKeycloak();
-
-  if (keycloak?.authenticated) {
-    console.log("Keycloak authenticated");
-  }
-
   return {
     props: {}
   }

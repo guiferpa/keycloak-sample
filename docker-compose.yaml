@@ -7,8 +7,6 @@ networks:
 services:
   db:
     image: postgres:13
-    volumes:
-      - ./.docker/postgresql:/var/lib/postgresql
     environment:
       POSTGRES_DB: keycloak
       POSTGRES_USER: keycloak
@@ -24,8 +22,6 @@ services:
   idp:
     image: quay.io/keycloak/keycloak:18.0.0-legacy
     container_name: keycloak
-    volumes:
-      - ./.docker/keycloak:/opt/jboss/keycloak/standalone
     environment:
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: pwd
@@ -63,6 +59,10 @@ services:
     build:
       context: frontend/ssr
       dockerfile: Dockerfile.dev
+    environment:
+      NEXT_PUBLIC_KEYCLOAK_CONFIG: "{\"realm\":\"sample\",\"url\":\"http://localhost:8080/auth/\",\"clientId\":\"frontend-ssr\"}"
+      NEXT_TELEMETRY_DISABLED: 1
+      NEXTAUTH_URL: "http://localhost:8082"
     volumes:
       - ./frontend/ssr/pages/:/opt/app/pages/
     networks:
