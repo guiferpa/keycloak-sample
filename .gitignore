@@ -1,3 +1,7 @@
 frontend/*/node_modules/
 frontend/*/build/
 frontend/*/dist/
+
+api/dist/
+api/node_modules/
+api/.storage
