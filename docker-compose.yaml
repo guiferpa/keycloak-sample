@@ -42,6 +42,19 @@ services:
       db:
         condition: service_healthy
 
+  backend-api:
+    container_name: backend-api
+    build:
+      context: backend/api
+      dockerfile: Dockerfile
+    environment:
+      KEYCLOAK_HOST: http://host.docker.internal:8080
+      KEYCLOAK_REALM: sample
+    networks:
+      - principal
+    ports:
+      - "8083:3000"
+
   frontend-spa:
     container_name: frontend-spa
     build: 
@@ -68,6 +81,7 @@ services:
       KEYCLOAK_REALM: sample
       KEYCLOAK_CLIENT_ID: frontend-ssr
       KEYCLOAK_CLIENT_SECRET: <KEYCLOAK_CLIENT_SECRET>
+      BACKEND_API_HOST: http://host.docker.internal:8083
     volumes:
       - ./frontend/ssr/pages/:/opt/app/pages/
     networks:
@@ -75,15 +89,3 @@ services:
     ports:
       - 8082:3000
 
-  backend-api:
-    container_name: backend-api
-    build:
-      context: backend/api
-      dockerfile: Dockerfile
-    environment:
-      KEYCLOAK_HOST: http://host.docker.internal:8080
-      KEYCLOAK_REALM: sample
-    networks:
-      - principal
-    ports:
-      - "8083:3000"

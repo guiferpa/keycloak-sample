@@ -6,8 +6,8 @@ import HttpStatusCodes from 'http-status-codes';
 import { withAuthentication } from '../middlewares/auth';
 import { parseCookies } from 'nookies';
 
-const Profile: NextPage<{ user: User | null }> = (props) => {
-  const { user } = props;
+const Profile: NextPage<{ user: User, secret: string | null }> = (props) => {
+  const { user, secret } = props;
 
   return (
     <>
@@ -20,7 +20,8 @@ const Profile: NextPage<{ user: User | null }> = (props) => {
         {user && (
           <div>
             <span>
-              <b>Name:</b> {user.name}
+              <b>Name:</b> {user.name} <br />
+              <b>Secret message:</b> {secret}
             </span>
           </div>
         )}
@@ -57,14 +58,36 @@ const getUser = async (ctx: GetServerSidePropsContext): Promise<User | null> => 
   }
 }
 
+const getSecretMessage = async (ctx: GetServerSidePropsContext): Promise<string> => {
+  try {
+    const cookies = parseCookies(ctx);
+    const host = process.env["BACKEND_API_HOST"];
+    const requester: AxiosInstance = axios.create({
+      baseURL: host,
+      timeout: 5000 // 5 seconds
+    });
+
+    const resp: AxiosResponse<any> = await requester.get('/api/hello', {
+      headers: {
+        "Authorization": `Bearer ${cookies[`${process.env["KEYCLOAK_CLIENT_ID"]}:access_token`]}`
+      }
+    });
+
+    return resp.data.message as string;
+  } catch(err) {
+    throw err;
+  }
+}
+
 export const getServerSideProps: GetServerSideProps = withAuthentication(
   async (
     ctx: GetServerSidePropsContext
   ): Promise<GetServerSidePropsResult<any>> => {
     const user = await getUser(ctx);
+    const message = await getSecretMessage(ctx);
 
     return {
-      props: { user }
+      props: { user, secret: message }
     }
   }
 );
