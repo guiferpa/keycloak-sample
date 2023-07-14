@@ -19,19 +19,21 @@ services:
       timeout: 5s
       retries: 3
 
-  idp:
-    image: quay.io/keycloak/keycloak:18.0.0-legacy
-    container_name: keycloak
+  sso:
+    image: quay.io/keycloak/keycloak:22.0
+    container_name: sso-keyblock
+    command: >
+      start-dev
     environment:
-      KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: pwd
-      DB_VENDOR: POSTGRES
-      DB_ADDR: db
-      DB_PORT: 5432
-      DB_DATABASE: keycloak
-      DB_SCHEMA: public
-      DB_PASSWORD: pwd
-      JDBC_PARAMS: "ssl=false"
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: pwd
+      KC_DB: postgres
+      KC_DB_URL_HOST: db
+      KC_DB_URL_PORT: 5432
+      KC_DB_URL_DATABASE: keycloak
+      KC_DB_PASSWORD: pwd
+    volumes:
+      - ./sso/realm/data/:/opt/keycloak/data/import/
     networks:
       - principal
     ports:
