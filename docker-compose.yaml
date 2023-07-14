@@ -67,7 +67,7 @@ services:
       KEYCLOAK_HOST: http://host.docker.internal:8080
       KEYCLOAK_REALM: sample
       KEYCLOAK_CLIENT_ID: frontend-ssr
-      KEYCLOAK_CLIENT_SECRET: ThuRrhQNEYRtlUfwGa6gWYWEH3ibTlkv
+      KEYCLOAK_CLIENT_SECRET: <KEYCLOAK_CLIENT_SECRET>
     volumes:
       - ./frontend/ssr/pages/:/opt/app/pages/
     networks:
@@ -83,8 +83,6 @@ services:
     environment:
       KEYCLOAK_HOST: http://host.docker.internal:8080
       KEYCLOAK_REALM: sample
-      KEYCLOAK_CLIENT_ID: backend-api
-      KEYCLOAK_CLIENT_SECRET: vwRBoqHHKYAfLvjFQvyOMGf4i0PXCA8V
     networks:
       - principal
     ports:
