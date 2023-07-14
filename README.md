@@ -5,7 +5,7 @@ Awesome ref link: https://www.appsdeveloperblog.com/keycloak-authorization-code-
 ### To do list before start the sample
 
 1. Change your /etc/hosts including `<current LAN IP> host.docker.internal`
-2. Exec `docker-componse up --build` to up and build frontend images
+2. Exec `docker-componse up --build` to up and build frontend and backend images
 
 ### SSO Keycloak
 When SSO's started then access http://host.docker.internal:8080/admin and use the creds **username**: admin, **password**: pwd.
