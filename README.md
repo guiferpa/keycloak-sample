@@ -8,6 +8,8 @@ Awesome ref link: https://www.appsdeveloperblog.com/keycloak-authorization-code-
 4. Input credentials (username: admin, password: pwd) to log in Keycloak admin section. *Feel free to change env var to set a differente username and password to Keycloak admin*
 5. Create two clients called frontend-spa and frontend-ssr
 
+### SSO Keycloak
+When SSO's started then access http://host.docker.internal:8080/admin
 
 ### Frontend SPA
 
