@@ -13,7 +13,7 @@ const isUserAuthenticated = async (): Promise<boolean> => {
       baseURL: host,
       timeout: 5000 // 5 seconds
     });
-    const resp: AxiosResponse<any> = await requester.get(`/auth/realms/${realm}/protocol/openid-connect/userinfo`, {
+    const resp: AxiosResponse<any> = await requester.get(`/realms/${realm}/protocol/openid-connect/userinfo`, {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem(`${process.env["REACT_APP_KEYCLOAK_CLIENT_ID"]}:access_token`)}`
       }

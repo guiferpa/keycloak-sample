@@ -43,7 +43,7 @@ const getUser = async (ctx: GetServerSidePropsContext): Promise<User | null> => 
       baseURL: host,
       timeout: 5000 // 5 seconds
     });
-    const resp: AxiosResponse<any> = await requester.get(`/auth/realms/${realm}/protocol/openid-connect/userinfo`, {
+    const resp: AxiosResponse<any> = await requester.get(`/realms/${realm}/protocol/openid-connect/userinfo`, {
       headers: {
         'Authorization': `Bearer ${cookies[`${process.env["KEYCLOAK_CLIENT_ID"]}:access_token`]}`
       }

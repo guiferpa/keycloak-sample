@@ -14,7 +14,7 @@ const getAuthenticationURL = (ctx: GetServerSidePropsContext): string => {
   const abs = absoluteUrl(ctx.req);
   const host = process.env["KEYCLOAK_HOST"];
   const realm = process.env["KEYCLOAK_REALM"];
-  const endpoint = `/auth/realms/${realm}/protocol/openid-connect/auth`;
+  const endpoint = `/realms/${realm}/protocol/openid-connect/auth`;
   const params = {
     "client_id": process.env["KEYCLOAK_CLIENT_ID"],
     "response_type": "code",

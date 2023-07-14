@@ -10,7 +10,7 @@ const getAccessToken = async (ctx: GetServerSidePropsContext, clientId: string, 
     const abs = absoluteUrl(ctx.req);
     const host = process.env["KEYCLOAK_HOST"];
     const realm = process.env["KEYCLOAK_REALM"];
-    const endpoint: string = `/auth/realms/${realm}/protocol/openid-connect/token`;
+    const endpoint: string = `/realms/${realm}/protocol/openid-connect/token`;
     const data = {
       "client_id": clientId,
       "client_secret": clientSecret,

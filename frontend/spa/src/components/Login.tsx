@@ -13,7 +13,7 @@ const isUserAuthenticated = async (): Promise<boolean> => {
       baseURL: host,
       timeout: 5000 // 5 seconds
     });
-    const resp: AxiosResponse<any> = await requester.get(`/auth/realms/${realm}/protocol/openid-connect/userinfo`, {
+    const resp: AxiosResponse<any> = await requester.get(`/realms/${realm}/protocol/openid-connect/userinfo`, {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem("frontend-spa:access_token")}`
       }
@@ -30,7 +30,7 @@ const isUserAuthenticated = async (): Promise<boolean> => {
 const getAuthenticationURL = (): string => {
   const host = process.env["REACT_APP_KEYCLOAK_HOST"];
   const realm = process.env["REACT_APP_KEYCLOAK_REALM"];
-  const endpoint = `/auth/realms/${realm}/protocol/openid-connect/auth`;
+  const endpoint = `/realms/${realm}/protocol/openid-connect/auth`;
   const params = {
     "client_id": process.env["REACT_APP_KEYCLOAK_CLIENT_ID"],
     "response_type": "id_token token",
