@@ -12,9 +12,10 @@ Awesome ref link: https://www.appsdeveloperblog.com/keycloak-authorization-code-
 When SSO's started then access http://host.docker.internal:8080/admin
 
 ### Frontend SPA
-
 This client has a flow based on public and implicit flow then you have to config this flow in Keycloak befora make your tests
 
 ### Frontend SSR
-
 This client has a flow based on confidential with authorization_code grant type then you have to config this flow in Keycloak before make your tests
+
+### Backend API
+This client has a flow with the goals just for get userinfo from Keycloak using Keycloak `access_token`.
