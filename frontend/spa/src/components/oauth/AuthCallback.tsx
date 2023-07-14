@@ -4,6 +4,9 @@ import { Navigate, useLocation } from 'react-router-dom';
 
 const OAuthCallback: React.FunctionComponent = () => {
   const location = useLocation();
+
+  console.log("Location from Keycloak:", location);
+
   if (location.search !== "") {
     const params = qs.parse(location.search);
     return (
