@@ -20,8 +20,10 @@ services:
       retries: 3
 
   sso:
-    image: quay.io/keycloak/keycloak:22.0
     container_name: sso-keyblock
+    build:
+      context: sso
+      dockerfile: Dockerfile
     command: >
       start-dev --import-realm
     environment:
@@ -32,6 +34,7 @@ services:
       KC_DB_URL_PORT: 5432
       KC_DB_URL_DATABASE: keycloak
       KC_DB_PASSWORD: pwd
+      KC_HOSTNAME: host.docker.internal
     volumes:
       - ./sso/realm/data/:/opt/keycloak/data/import/
     networks:
