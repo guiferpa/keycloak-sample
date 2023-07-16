@@ -6,6 +6,7 @@ import type { PageProps } from "keycloakify/login/pages/PageProps";
 import { useGetClassName } from "keycloakify/login/lib/useGetClassName";
 import type { KcContext } from "../kcContext";
 import type { I18n } from "../i18n";
+import {FormControl, FormLabel, Input} from "@chakra-ui/react";
 
 export default function Login(props: PageProps<Extract<KcContext, { pageId: "login.ftl" }>, I18n>) {
     const { kcContext, i18n, doUseDefaultCss, Template, classes } = props;
@@ -77,14 +78,13 @@ export default function Login(props: PageProps<Extract<KcContext, { pageId: "log
                                     const autoCompleteHelper: typeof label = label === "usernameOrEmail" ? "username" : label;
 
                                     return (
-                                        <>
-                                            <label htmlFor={autoCompleteHelper} className={getClassName("kcLabelClass")}>
+                                        <FormControl>
+                                            <FormLabel htmlFor={autoCompleteHelper}>
                                                 {msg(label)}
-                                            </label>
-                                            <input
+                                            </FormLabel>
+                                            <Input
                                                 tabIndex={1}
                                                 id={autoCompleteHelper}
-                                                className={getClassName("kcInputClass")}
                                                 //NOTE: This is used by Google Chrome auto fill so we use it to tell
                                                 //the browser how to pre fill the form but before submit we put it back
                                                 //to username because it is what keycloak expects.
@@ -93,12 +93,10 @@ export default function Login(props: PageProps<Extract<KcContext, { pageId: "log
                                                 type="text"
                                                 {...(usernameEditDisabled
                                                     ? { "disabled": true }
-                                                    : {
-                                                          "autoFocus": true,
-                                                          "autoComplete": "off"
-                                                      })}
+                                                    : { "autoFocus": true, "autoComplete": "off"})
+                                                }
                                             />
-                                        </>
+                                        </FormControl>
                                     );
                                 })()}
                             </div>
