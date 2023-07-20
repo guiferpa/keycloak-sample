@@ -35,6 +35,9 @@ services:
       KC_DB_URL_DATABASE: keycloak
       KC_DB_PASSWORD: pwd
       KC_HOSTNAME: host.docker.internal
+      KC_HOSTNAME_ADMIN: host.docker.internal
+      KC_HEALTH_ENABLED: true
+      KC_PROXY_ENABLED: true
     volumes:
       - ./sso/realm/data/:/opt/keycloak/data/import/
     networks:
@@ -43,6 +46,31 @@ services:
       - 8080:8080
     depends_on:
       db:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "/usr/local/bin/xh",
+          "--check-status",
+          "http://localhost:8080/health/ready",
+        ]
+      interval: 5s
+      timeout: 2s
+      retries: 5
+
+  proxy:
+    container_name: proxy-nginx
+    build:
+      context: proxy
+      dockerfile: Dockerfile
+    networks:
+      - principal
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      sso:
         condition: service_healthy
 
   backend-api:
@@ -57,10 +85,13 @@ services:
       - principal
     ports:
       - "8083:3000"
+    depends_on:
+      sso:
+        condition: service_healthy
 
   frontend-spa:
     container_name: frontend-spa
-    build: 
+    build:
       context: frontend/spa
       dockerfile: Dockerfile.dev # For works as production change Dockerfile.dev to just Dockerfile
     environment:
@@ -73,6 +104,9 @@ services:
       - principal
     ports:
       - 8081:3000 # For works as production change the port bind to 8080 intead of 3000
+    depends_on:
+      sso:
+        condition: service_healthy
 
   frontend-ssr:
     container_name: frontend-ssr
@@ -91,4 +125,6 @@ services:
       - principal
     ports:
       - 8082:3000
-
+    depends_on:
+      sso:
+        condition: service_healthy
